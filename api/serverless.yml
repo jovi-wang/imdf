@@ -1,0 +1,32 @@
+service: imdf-slack-app
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+plugins:
+  - serverless-webpack
+custom:
+  webpackIncludeModules: true 
+
+provider:
+  name: aws
+  stage: ${opt:stage}
+  runtime: nodejs8.10
+  region: ${opt:region}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "iot:*"
+      Resource: "arn:aws:iot:*:*:*" 
+    
+functions:
+  webhook:
+    handler: handler.webhook
+    environment:
+      SLACK_SIGNING_SECRET: xxxxxx
+      USER_LIST: 'vmrcompanion/test/jovi,vmrcompanion/test/harisvmrcompanion/test/james'
+      COMMAND_LIST: '%2Fwfh,%2Fwfo'
+    events:
+      - http:
+          method: POST
+          path: /command
+    
