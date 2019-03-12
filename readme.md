@@ -16,11 +16,30 @@ wpa_passphrase '<WIFI_SSID>' '<WIFI_PRESHARE_KEY>' >> /etc/wpa_supplicant/wpa_su
 init 6
 ```
 
+### Install IMDF dependencies
+
+```SHELL
+cd ~/imdf/iot-client
+npm i
+```
+
+### Install python library to light led
+
+```SHELL
+# sudo pip3 install adafruit-circuitpython-lis3dh
+sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
+```
+
 ### Install pm2 globally
 
 ```SHELL
 npm install pm2 -g
-cd imdf/iot-client
+```
+
+### Start IMDF using pm2
+
+```SHELL
+cd ~/imdf/iot-client
 pm2 --name "imdf" start npm -- start
 ```
 
@@ -34,13 +53,11 @@ pm2 startup
 
 ```SHELL
 sudo su -c "env PATH=$PATH:/home/unitech/.nvm/versions/node/v4.3/bin pm2 startup <distribution> -u <user> --hp <home-path>
-
 pm2 save
 ```
 
-### Install python library to light led
+### Monitor processes managed by pm2
 
 ```SHELL
-# sudo pip3 install adafruit-circuitpython-lis3dh
-sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
+pm2 monit
 ```
