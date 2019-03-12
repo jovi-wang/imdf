@@ -12,6 +12,9 @@ provider:
   stage: ${opt:stage}
   runtime: nodejs8.10
   region: ${opt:region}
+  environment:
+      MQTT_ENDPOINT: 'mqtt-endpoint'
+      TOPIC: 'imdf'
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -25,8 +28,6 @@ functions:
       SLACK_SIGNING_SECRET: 'xxxxxx'
       USER_LIST: 'vmrcompanion/test/jovi,vmrcompanion/test/haris,vmrcompanion/test/james'
       COMMAND_LIST: '%2Fwfh,%2Fwfo'
-      MQTT_ENDPOINT: 'mqtt-endpoint'
-      TOPIC: 'imdf'
     events:
       - http:
           method: POST
@@ -35,7 +36,6 @@ functions:
   reserveAll:
     handler: handler.reserveAll
     environment:
-      TOPIC: 'imdf'
       DEVICE_LIST: 'jovi,haris,james'
     events:
       - schedule: cron(0 11 * * ? *) 
