@@ -22,11 +22,11 @@ functions:
   webhook:
     handler: handler.webhook
     environment:
-      SLACK_SIGNING_SECRET: xxxxxx
-      USER_LIST: 'vmrcompanion/test/jovi,vmrcompanion/test/haris, vmrcompanion/test/james'
+      SLACK_SIGNING_SECRET: 'xxxxxx',
+      USER_LIST: 'vmrcompanion/test/jovi,vmrcompanion/test/haris, vmrcompanion/test/james',
       COMMAND_LIST: '%2Fwfh,%2Fwfo',
       MQTT_ENDPOINT: 'mqtt-endpoint',
-      TOPIC: topic
+      TOPIC: 'topic'
     events:
       - http:
           method: POST
