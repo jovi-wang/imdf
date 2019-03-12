@@ -25,11 +25,27 @@ exports.webhook = async (event) => {
     qos: 0
   };
   await iotdata.publish(params).promise();
-
+  const body = `Your desk is ${state === 'wfo' ? 'not ' : ''}available now`;
   return {
     statusCode: 200,
-    body: 'The availability of your desk has been updated'
+    body
   };
+};
+
+exports.reserveAll = async () => {
+  console.log(new Date().toISOString());
+  const deviceList = process.env.DEVICE_LIST.split(',');
+  for (const device of deviceList) {
+    const params = {
+      topic: process.env.TOPIC,
+      payload: JSON.stringify({
+        device,
+        state: 'wfo'
+      }),
+      qos: 0
+    };
+    await iotdata.publish(params).promise();
+  }
 };
 
 

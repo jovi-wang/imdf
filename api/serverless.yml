@@ -26,9 +26,17 @@ functions:
       USER_LIST: 'vmrcompanion/test/jovi,vmrcompanion/test/haris,vmrcompanion/test/james'
       COMMAND_LIST: '%2Fwfh,%2Fwfo'
       MQTT_ENDPOINT: 'mqtt-endpoint'
-      TOPIC: 'topic'
+      TOPIC: 'imdf'
     events:
       - http:
           method: POST
           path: /command
-    
+
+  reserveAll:
+    handler: handler.reserveAll
+    environment:
+      TOPIC: 'imdf'
+      DEVICE_LIST: 'jovi,haris,james'
+    events:
+      - schedule: cron(0 11 * * ? *) 
+      # every day 12.00am/1.00am (utc + 11) depends on daylight saving

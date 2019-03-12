@@ -17,7 +17,9 @@ const device = awsIot.device({
     certPath: awsCertPath,
     caPath: awsCaPath1,
     clientId,
-    host
+    host,
+    autoResubscribe: true,
+
 });
 
 device.on('connect', ()=>{
@@ -39,9 +41,6 @@ device.on('offline', ()=>{
 });
 
 device.on('message', (topic, payload)=>{
-    console.log(topic.toString());
-    console.log(payload.toString());
-
     const { device, state } = JSON.parse(payload.toString());
     console.log('device:', device);
     console.log('state:', state);
@@ -51,7 +50,15 @@ device.on('message', (topic, payload)=>{
             spawn('python3', ['./led_wfh.py']);
         if (state === 'wfo')
             spawn('python3', ['./led_wfo.py']);
-
     }
-})
+});
 
+//run wfo office in case 
+setInterval(()=>{
+    const current = new Date();
+    console.log('timestamp:', current.toISOString());
+    if(current.getHours() === 0) {
+        console.log('it is time to reserver all desk now');
+        spawn('python3', ['./led_wfo.py']);
+    }
+}, 60 * 60 * 1000);
