@@ -21,21 +21,21 @@ const device = awsIot.device({
 });
 
 device.on('connect', ()=>{
-    console.log('connect');
+    console.log('connect', new Date().toISOString());
     device.subscribe(SUBSCRIBE_TOPIC);
 });
 
 device.on('error', (err)=>{
-    console.log(err);
+    console.log(err, new Date().toISOString());
 });
 device.on('close', ()=>{
-    console.log('close');
+    console.log('close', new Date().toISOString());
 });
 device.on('reconnect', ()=>{
-    console.log('reconnect');
+    console.log('reconnect', new Date().toISOString());
 });
 device.on('offline', ()=>{
-    console.log('offline');
+    console.log('offline', new Date().toISOString());
 });
 
 device.on('message', (topic, payload)=>{

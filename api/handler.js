@@ -4,11 +4,10 @@ const crypto = require('crypto');
 const iotdata = new AWS.IotData({
   endpoint: process.env.MQTT_ENDPOINT,
   apiVersion: '2015-05-28',
-  region: 'ap-southeast-2'
+  region: process.env.AWS_REGION // pull region from lambda's env variable, not defined in serverless.yml
 });
 
 exports.webhook = async (event) => {
-  console.log(process.env);
   const temp = validateSlackRequest(event);
   if (!temp) return;
   const { device, state } = temp;
