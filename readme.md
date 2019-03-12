@@ -1,18 +1,46 @@
+# IMDF Prototype
 
-## steup
-### install pm2 globally
+Project: Is My Desk Free?
 
-`npm install pm2 -g
+## Context Overview
+
+![imdf-context-overview.png](assets/imdf-context-overview.png)
+
+## Setup
+
+### WiFi Setup
+
+```SHELL
+sudo su -
+wpa_passphrase '<WIFI_SSID>' '<WIFI_PRESHARE_KEY>' >> /etc/wpa_supplicant/wpa_supplicant.conf
+init 6
+```
+
+### Install pm2 globally
+
+```SHELL
+npm install pm2 -g
 cd imdf/iot-client
-pm2 --name "imdf" start npm -- start`
+pm2 --name "imdf" start npm -- start
+```
 
-setup system startup hook using 
+### Setup system startup hook
 
-`pm2 startup`
+```SHELL
+pm2 startup
+```
 
-follow instruction prompt and save config
-`sudo su -c "env PATH=$PATH:/home/unitech/.nvm/versions/node/v4.3/bin pm2 startup <distribution> -u <user> --hp <home-path>`
+### Follow instruction prompt and save config
 
-`pm2 save`
+```SHELL
+sudo su -c "env PATH=$PATH:/home/unitech/.nvm/versions/node/v4.3/bin pm2 startup <distribution> -u <user> --hp <home-path>
 
-install python library to light led
+pm2 save
+```
+
+### Install python library to light led
+
+```SHELL
+# sudo pip3 install adafruit-circuitpython-lis3dh
+sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
+```
