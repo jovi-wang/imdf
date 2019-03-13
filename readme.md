@@ -61,3 +61,6 @@ pm2 save
 ```SHELL
 pm2 monit
 ```
+
+
+ps: user's name in the channel and  deviceId in iot-client should be identical

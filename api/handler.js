@@ -9,7 +9,12 @@ const iotdata = new AWS.IotData({
 
 exports.webhook = async (event) => {
   const temp = validateSlackRequest(event);
-  if (!temp) return;
+  if (!temp) { 
+    return {
+      statusCode: 200,
+      body: 'Sorry it seems you dont have a device on your desk, so we can not change the availability of your desk'
+    }; 
+}
   const { device, state } = temp;
 
   console.log('device:', device);
@@ -25,10 +30,13 @@ exports.webhook = async (event) => {
     qos: 0
   };
   await iotdata.publish(params).promise();
-  const body = `Your desk is ${state === 'wfo' ? 'not ' : ''}available now`;
+  const body = {
+    response_type: 'in_channel',
+    text: `\`${device}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now`,
+  };
   return {
     statusCode: 200,
-    body
+    body: JSON.stringify(body)
   };
 };
 
