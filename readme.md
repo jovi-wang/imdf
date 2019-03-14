@@ -62,5 +62,10 @@ pm2 save
 pm2 monit
 ```
 
-
 ps: user's name in the channel and  deviceId in iot-client should be identical
+
+## Hardware
+
+### Pinout
+
+![rpi-pinout.png](assets/rpi-pinout.png)
