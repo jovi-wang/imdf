@@ -32,7 +32,7 @@ exports.webhook = async (event) => {
   await iotdata.publish(params).promise();
   const body = {
     response_type: 'in_channel',
-    text: `\`${device}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now`,
+    text: `\`${device}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now. ${state === 'wfo' ? ':red_circle:' : ':green_circle:'}`,
   };
   return {
     statusCode: 200,
