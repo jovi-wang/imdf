@@ -69,3 +69,7 @@ ps: user's name in the channel and  deviceId in iot-client should be identical
 ### Pinout
 
 ![rpi-pinout.png](assets/rpi-pinout.png)
+
+### Wiring
+
+![imdf-wiring.png](assets/imdf-wiring.png)
