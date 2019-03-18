@@ -12,7 +12,7 @@ exports.webhook = async (event) => {
   if (!temp) { 
     return {
       statusCode: 200,
-      body: 'Sorry it seems you dont have a device on your desk, so we can not change the availability of your desk'
+      body: 'Opps, it seems you do not have a device on your desk, we can not change the availability of your desk'
     }; 
 }
   const { device, state } = temp;
@@ -32,7 +32,7 @@ exports.webhook = async (event) => {
   await iotdata.publish(params).promise();
   const body = {
     response_type: 'in_channel',
-    text: `\`${device}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now. ${state === 'wfo' ? ':red_circle:' : ':green_circle:'}`,
+    text: ` ${state === 'wfo' ? ':red_circle:' : ':green_circle:'} \`${device}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now.`,
   };
   return {
     statusCode: 200,
