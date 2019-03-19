@@ -8,6 +8,11 @@ Project: Is My Desk Free?
 
 ## Setup
 
+###
+install image `Raspbian Stretch Lite` to sd card, following the instruction (default user is pi, password is raspberry)
+
+https://www.raspberrypi.org/documentation/installation/installing-images/README.md
+
 ### WiFi Setup
 
 ```SHELL
@@ -15,12 +20,32 @@ sudo su -
 wpa_passphrase '<WIFI_SSID>' '<WIFI_PRESHARE_KEY>' >> /etc/wpa_supplicant/wpa_supplicant.conf
 init 6
 ```
+https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
+
+## install general dependencies and setup
+
+```SHELL
+sudo apt-get update
+sudp apt-get install git -y
+# install nodejs and npm
+curl -o node-v9.9.0-linux-armv6l.tar.gz https://nodejs.org/dist/v9.9.0/node-v9.9.0-linux-armv6l.tar.gz
+tar -xzf node-v9.9.0-linux-armv6l.tar.gz
+sudo cp -r node-v9.9.0-linux-armv6l/* /usr/local/
+node -v
+npm -v
+git clone https://github.com/jovi-wang/imdf.git
+```
+
 
 ### Install IMDF dependencies
 
 ```SHELL
 cd ~/imdf/iot-client
 npm i
+mkdir certificates
+# copy certificates using scp command
+nano config.js
+# change deviceId and certificatePrefix
 ```
 
 ### Install python library to light led
