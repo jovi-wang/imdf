@@ -14,12 +14,13 @@ exports.webhook = async (event) => {
       statusCode: 200,
       body: 'Opps, it seems you do not have a device on your desk, we can not change the availability of your desk'
     }; 
-}
-  const { device, state } = temp;
+  }
+  // device: userId in channel, state: is command
+  const { device, state, userName } = temp;
 
   console.log('device:', device);
   console.log('state:', state);
-
+  console.log('user:', userName);
 
   const params = {
     topic: process.env.TOPIC,
@@ -32,7 +33,7 @@ exports.webhook = async (event) => {
   await iotdata.publish(params).promise();
   const body = {
     response_type: 'in_channel',
-    text: ` ${state === 'wfo' ? ':red_circle:' : ':green_circle:'} \`${device}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now.`,
+    text: ` ${state === 'wfo' ? ':red_circle:' : ':green_circle:'} \`${userName}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now.`,
   };
   return {
     statusCode: 200,
@@ -59,7 +60,8 @@ exports.reserveAll = async () => {
 
 // https://api.slack.com/docs/verifying-requests-from-slack
 const validateSlackRequest = (event) => {
-  const { SLACK_SIGNING_SECRET, USER_LIST, COMMAND_LIST } = process.env;
+  const { SLACK_SIGNING_SECRET, USER_LIST, COMMAND_LIST, USER_DEVICE_MAP } = process.env;
+  console.log('event body', event.body);
   // get token from event.body
   // sample value is 
   // token=m2GM275b7205B9WPUZQRDLR8&
@@ -76,10 +78,10 @@ const validateSlackRequest = (event) => {
   const bodyArray = requestBody.split('&');
   // token has been deprecated by slack
   //const token = bodyArray.find(i => i.includes('token=')).split('=')[1];
-  const workspace = bodyArray.find(i => i.includes('team_domain=')).split('=')[1];
-  const channel = bodyArray.find(i => i.includes('channel_name=')).split('=')[1];
+  const workspace = bodyArray.find(i => i.includes('team_id=')).split('=')[1];
+  const channel = bodyArray.find(i => i.includes('channel_id=')).split('=')[1];
   const command = bodyArray.find(i => i.includes('command=')).split('=')[1];
-  const user = bodyArray.find(i => i.includes('user_name=')).split('=')[1];
+  const user = bodyArray.find(i => i.includes('user_id=')).split('=')[1];
   // extract the following 2 params
   //'X-Slack-Request-Timestamp': '1552215791'
   //'X-Slack-Signature': 'v0=429af94cf227df882bb48c4113fd4e5918919739ce02e67550ce25513bd6efa2'
@@ -101,10 +103,17 @@ const validateSlackRequest = (event) => {
 
   // check if team, channel and member are valid
   if (!USER_LIST.split(',').includes(`${workspace}/${channel}/${user}`)) return false;
+  
+  // convert userId into userName
+  // deviceMap looks like userId:userName
+  const userDeviceMap = USER_DEVICE_MAP.split(',').find(i => i.startsWith(user));
+  if (!userDeviceMap) return false;
+  const userName = userDeviceMap.split(':')[1];
 
   return {
     device: user,
-    state: command.substring(3)
+    state: command.substring(3),
+    userName
   };
 };
 

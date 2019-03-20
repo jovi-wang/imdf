@@ -47,7 +47,6 @@ git clone https://github.com/jovi-wang/imdf.git
 ```SHELL
 cd ~/imdf/iot-client
 npm i
-mkdir certificates
 # copy certificates using scp command
 nano config.js
 # change deviceId and certificatePrefix

@@ -1,4 +1,5 @@
-const deviceId = 'jovi';
+// const deviceId = 'jovi';
+const deviceId = 'user_id_in_slack';
 const certificatePrefix = 'a27a9d8d5d';
 
 module.exports = {
