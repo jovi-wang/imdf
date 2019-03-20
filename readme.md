@@ -8,25 +8,30 @@ Project: Is My Desk Free?
 
 ## Setup
 
-###
+### image installation
+
 install image `Raspbian Stretch Lite` to sd card, following the instruction (default user is pi, password is raspberry)
 
 https://www.raspberrypi.org/documentation/installation/installing-images/README.md
 
-### WiFi Setup
+
+### Setup
+
+run `sudo raspi-config` to enable ssh, change timezone, change locale and change keyboard setting
 
 ```SHELL
 sudo su -
 wpa_passphrase '<WIFI_SSID>' '<WIFI_PRESHARE_KEY>' >> /etc/wpa_supplicant/wpa_supplicant.conf
 init 6
 ```
+
 https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
 
 ## install general dependencies and setup
 
 ```SHELL
 sudo apt-get update
-sudp apt-get install git -y
+sudo apt-get install git python3-pip -y
 # install nodejs and npm
 curl -o node-v9.9.0-linux-armv6l.tar.gz https://nodejs.org/dist/v9.9.0/node-v9.9.0-linux-armv6l.tar.gz
 tar -xzf node-v9.9.0-linux-armv6l.tar.gz
@@ -58,14 +63,14 @@ sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
 ### Install pm2 globally
 
 ```SHELL
-npm install pm2 -g
+sudo npm install pm2 -g
 ```
 
 ### Start IMDF using pm2
 
 ```SHELL
 cd ~/imdf/iot-client
-pm2 --name "imdf" start npm -- start
+pm2 --watch --name "imdf" start npm -- start
 ```
 
 ### Setup system startup hook
@@ -87,7 +92,7 @@ pm2 save
 pm2 monit
 ```
 
-ps: user's name in the channel and  deviceId in iot-client should be identical
+ps: user's name in the channel and  deviceId in iot-client's config.js should be identical. need to match lambda's env variables
 
 ## Hardware
 
