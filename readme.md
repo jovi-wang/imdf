@@ -17,7 +17,13 @@ https://www.raspberrypi.org/documentation/installation/installing-images/README.
 
 ### Setup
 
-run `sudo raspi-config` to enable ssh, change timezone, change locale and change keyboard setting
+run `sudo raspi-config`
+
+* enable ssh
+* change timezone 
+* change locale (US, utf8)
+* change keyboard setting(US keyboard)
+* change hostname
 
 ```SHELL
 sudo su -
