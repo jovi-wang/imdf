@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const crypto = require('crypto');
+const axios = require('axios');
 
 const iotdata = new AWS.IotData({
   endpoint: process.env.MQTT_ENDPOINT,
@@ -16,11 +17,12 @@ exports.webhook = async (event) => {
     }; 
   }
   // device: userId in channel, state: is command
-  const { device, state, userName } = temp;
+  const { device, state, userName, responseUrl } = temp;
 
   console.log('device:', device);
   console.log('state:', state);
   console.log('user:', userName);
+  console.log('responseUrl', responseUrl);
 
   const params = {
     topic: process.env.TOPIC,
@@ -35,9 +37,10 @@ exports.webhook = async (event) => {
     response_type: 'in_channel',
     text: ` ${state === 'wfo' ? ':red_circle:' : ':green_circle:'} \`${userName}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now.`,
   };
+  // post response in response url, so user entered command do not show in channel
+  await axios.post(responseUrl, body);
   return {
-    statusCode: 200,
-    body: JSON.stringify(body)
+    statusCode: 200
   };
 };
 
@@ -82,6 +85,8 @@ const validateSlackRequest = (event) => {
   const channel = bodyArray.find(i => i.includes('channel_id=')).split('=')[1];
   const command = bodyArray.find(i => i.includes('command=')).split('=')[1];
   const user = bodyArray.find(i => i.includes('user_id=')).split('=')[1];
+
+  const responseUrl = decodeURIComponent(bodyArray.find(i => i.includes('response_url=')).split('=')[1]);
   // extract the following 2 params
   //'X-Slack-Request-Timestamp': '1552215791'
   //'X-Slack-Signature': 'v0=429af94cf227df882bb48c4113fd4e5918919739ce02e67550ce25513bd6efa2'
@@ -113,7 +118,8 @@ const validateSlackRequest = (event) => {
   return {
     device: user,
     state: command.substring(3),
-    userName
+    userName,
+    responseUrl
   };
 };
 
