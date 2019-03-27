@@ -35,7 +35,6 @@ https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
 
 TODO:
 * write script to automate setup 
-* write script/set up cron job to reconnect to wifi on drop
 
 ## install general dependencies and setup
 

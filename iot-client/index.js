@@ -62,3 +62,13 @@ setInterval(()=>{
         spawn('python3', ['./led_wfo.py']);
     }
 }, 60 * 60 * 1000);
+
+// check internet connection
+setInterval(()=>{
+    require('dns').resolve('www.google.com', (err) => {
+        if (err) {
+           spawn('ifconfig', ['wlan0', 'up']);
+           spawn('python3', ['./led_white_flash.py'])
+        }
+      });
+}, 15 * 1000);
