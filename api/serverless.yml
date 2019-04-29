@@ -12,6 +12,8 @@ provider:
   stage: ${opt:stage}
   runtime: nodejs8.10
   region: ${opt:region}
+  memorySize: 256 # Overwrite the default memory size. Default is 1024
+  timeout: 5 # The default is 6 seconds. Note: API Gateway current maximum is 30 seconds
   environment:
       MQTT_ENDPOINT: 'mqtt-endpoint'
       TOPIC: 'imdf'
@@ -29,6 +31,8 @@ functions:
       USER_LIST: 'vmrcompanion/test/jovi,vmrcompanion/test/haris,vmrcompanion/test/james'
       COMMAND_LIST: '%2Fwfh,%2Fwfo'
       USER_DEVICE_MAP: 'a:a,b:b,c:c'
+      TOPIC: 'imdf'
+      MQTT_ENDPOINT: 'abc-aws.iot.ap-southeast-2.amazonaws.com'
     events:
       - http:
           method: POST
@@ -37,7 +41,9 @@ functions:
   reserveAll:
     handler: handler.reserveAll
     environment:
+      MQTT_ENDPOINT: 'abc-aws.iot.ap-southeast-2.amazonaws.com'
       DEVICE_LIST: 'jovi,haris,james'
+      TOPIC: 'imdf'
     events:
       - schedule: cron(0 11 * * ? *) 
       # every day 12.00am/1.00am (utc + 11) depends on daylight saving
