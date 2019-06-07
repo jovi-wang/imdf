@@ -17,12 +17,13 @@ exports.webhook = async (event) => {
     }; 
   }
   // device: userId in channel, state: is command
-  const { device, state, userName, responseUrl } = temp;
+  const { device, state, userName, responseUrl, text } = temp;
 
   console.log('device:', device);
   console.log('state:', state);
   console.log('user:', userName);
   console.log('responseUrl', responseUrl);
+  console.log('text', decodeURIComponent(text.replace(/\+/g, '%20')));
 
   const params = {
     topic: process.env.TOPIC,
@@ -36,6 +37,9 @@ exports.webhook = async (event) => {
   const body = {
     response_type: 'in_channel',
     text: ` ${state === 'wfo' ? ':red_circle:' : ':green_circle:'} \`${userName}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now.`,
+    attachments: [
+      { text: decodeURIComponent(text.replace(/\+/g, '%20')) }
+    ]
   };
   // post response in response url, so user entered command do not show in channel
   await axios.post(responseUrl, body);
@@ -86,6 +90,9 @@ const validateSlackRequest = (event) => {
   const command = bodyArray.find(i => i.includes('command=')).split('=')[1];
   const user = bodyArray.find(i => i.includes('user_id=')).split('=')[1];
 
+  // handle the case that user text has '=' sign
+  const text = bodyArray.find(i => i.includes('text=')).substring(5);
+
   const responseUrl = decodeURIComponent(bodyArray.find(i => i.includes('response_url=')).split('=')[1]);
   // extract the following 2 params
   //'X-Slack-Request-Timestamp': '1552215791'
@@ -119,7 +126,8 @@ const validateSlackRequest = (event) => {
     device: user,
     state: command.substring(3),
     userName,
-    responseUrl
+    responseUrl,
+    text
   };
 };
 
