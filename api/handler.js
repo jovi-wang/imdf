@@ -25,15 +25,16 @@ exports.webhook = async (event) => {
   console.log('responseUrl', responseUrl);
   console.log('text', decodeURIComponent(text.replace(/\+/g, '%20')));
 
-  const params = {
-    topic: process.env.TOPIC,
-    payload: JSON.stringify({
-      device,
-      state
-    }),
-    qos: 0
-  };
-  await iotdata.publish(params).promise();
+  // iot publish to devices
+  // const params = {
+  //   topic: process.env.TOPIC,
+  //   payload: JSON.stringify({
+  //     device,
+  //     state
+  //   }),
+  //   qos: 0
+  // };
+  // await iotdata.publish(params).promise();
   const body = {
     response_type: 'in_channel',
     text: ` ${state === 'wfo' ? ':red_circle:' : ':green_circle:'} \`${userName}\`'s desk is ${state === 'wfo' ? 'not ' : ''}available now.`,
