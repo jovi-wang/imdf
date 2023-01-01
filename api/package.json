@@ -16,7 +16,7 @@
   "devDependencies": {
     "eslint-config-rallycoding": "^3.2.0",
     "serverless-webpack": "^5.2.0",
-    "webpack": "^4.29.6",
+    "webpack": "^5.75.0",
     "webpack-node-externals": "^1.7.2"
   }
 }
